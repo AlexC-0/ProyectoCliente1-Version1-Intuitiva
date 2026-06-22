@@ -15,6 +15,18 @@ const interestSelect = document.querySelector("select[name='interest']");
 const languageButton = document.querySelector(".language-button");
 const languageMenu = document.querySelector("#language-menu");
 const currentLang = document.querySelector(".current-lang");
+const guideButton = document.querySelector("[data-guide-submit]");
+const guideFeedback = document.querySelector(".guide-feedback");
+const guideApplication = document.querySelector("#guide-application");
+const guideStage = document.querySelector("#guide-stage");
+const guideInterest = document.querySelector("#guide-interest");
+const carouselButtons = Array.from(document.querySelectorAll("[data-carousel]"));
+const scrollTopButton = document.querySelector(".scroll-top");
+const processTrigger = document.querySelector(".process-trigger");
+const processPanel = document.querySelector("#proceso");
+const processClose = document.querySelector(".process-close");
+const processLinks = Array.from(document.querySelectorAll("a[href='#proceso']"));
+const productOrder = ["nmc", "lfp", "bms"];
 
 const translations = {
   es: {
@@ -23,47 +35,46 @@ const translations = {
     "nav.process": "Proceso",
     "nav.docs": "Documentacion",
     "nav.cta": "Consulta tecnica",
+    "nav.openMenu": "Abrir menu",
+    "nav.top": "Volver al inicio",
+    "lang.select": "Seleccionar idioma",
+    "lang.es": "ES Espanol",
+    "lang.en": "EN English",
+    "lang.eu": "EU Euskara",
+    "lang.fr": "FR Francais",
     "hero.eyebrow": "Baterias de alto voltaje para movilidad electrica exigente",
-    "hero.title": "Sistemas industriales que aceleran la integracion electrica de OEMs y fabricantes.",
-    "hero.text": "Packs modulares, arquitectura multipack y soporte tecnico para autobuses, marino, agricola, vehiculos comerciales, carga movil y ferrocarril.",
+    "hero.title": "Sistemas HV claros para integrar sin rodeos.",
+    "hero.text": "Packs modulares, control multipack y soporte tecnico para aplicaciones industriales de movilidad electrica.",
     "hero.primary": "Orientar mi proyecto",
     "hero.secondary": "Explorar productos",
     "metric.energy": "Energia por pack",
     "metric.arch": "Arquitecturas nominales",
     "metric.protection": "Proteccion industrial",
     "metric.multipack": "Gestion multipack",
-    "path.application": "Tengo una aplicacion",
-    "path.applicationText": "Encuentra el enfoque por sector.",
-    "path.products": "Quiero ver productos",
-    "path.productsText": "Imagen, resumen y detalle bajo demanda.",
-    "path.docs": "Necesito datos tecnicos",
-    "path.docsText": "Ficha, configuracion y requisitos.",
-    "path.engineering": "Quiero hablar con ingenieria",
-    "path.engineeringText": "Solicitud cualificada desde el inicio.",
+    "guide.eyebrow": "Ruta guiada",
+    "guide.title": "Tres decisiones para llegar al siguiente paso.",
+    "guide.text": "Elige aplicacion, fase e interes. La web prepara la consulta y evita pasos innecesarios.",
+    "guide.cta": "Preparar consulta",
+    "guide.empty": "Selecciona al menos una opcion para preparar la consulta.",
+    "guide.done": "Consulta orientada. Hemos trasladado tus opciones al formulario.",
     "apps.eyebrow": "Aplicaciones",
     "apps.title": "Una entrada clara para cada tipo de proyecto.",
-    "apps.text": "La web guia primero por necesidad industrial, no por catalogo. Asi el visitante entiende rapido si la solucion encaja con su vehiculo, potencia, energia y fase de desarrollo.",
+    "apps.text": "Primero se elige el entorno de uso. Despues se orienta la solucion y la consulta.",
     "apps.busTitle": "Autobuses electricos e hidrogeno",
-    "apps.busText": "Arquitecturas multi-rack para vehiculos urbanos, interurbanos y chasis de diferentes longitudes.",
-    "apps.busCta": "Validar integracion",
+    "apps.busText": "Multi-rack para urbano e interurbano.",
     "apps.seaTitle": "Marino electrico e hibrido",
-    "apps.seaText": "Sistemas paralelizados para ferries, embarcaciones de trabajo y unidades de potencia hibridas.",
-    "apps.seaCta": "Estudiar caso marino",
+    "apps.seaText": "Packs en paralelo para ferries y trabajo marino.",
     "apps.agrTitle": "Agricola e industrial movil",
-    "apps.agrText": "Soluciones compactas para maquinaria con altas demandas de energia, potencia y durabilidad.",
-    "apps.agrCta": "Definir requisitos",
+    "apps.agrText": "Energia robusta para maquinaria movil.",
     "apps.vclTitle": "Vehiculos comerciales ligeros",
-    "apps.vclText": "Formato compatible con integracion automotriz y series cortas o medias de produccion.",
-    "apps.vclCta": "Solicitar orientacion",
+    "apps.vclText": "Formato para integracion y series cortas.",
     "apps.chargeTitle": "Estaciones de carga moviles",
-    "apps.chargeText": "Packs para infraestructura semiestacionaria, eventos temporales y apoyo energetico local.",
-    "apps.chargeCta": "Dimensionar energia",
+    "apps.chargeText": "Apoyo energetico temporal o semiestacionario.",
     "apps.railTitle": "Ferrocarril",
-    "apps.railText": "Configuraciones multipack para aplicaciones ferroviarias con necesidades energeticas elevadas.",
-    "apps.railCta": "Revisar arquitectura",
+    "apps.railText": "Multipack para alta demanda energetica.",
     "products.eyebrow": "Productos",
     "products.title": "Primero se mira, despues se profundiza.",
-    "products.text": "La version intuitiva no abruma con tablas. Presenta cada solucion como una pieza clara, atractiva y accionable; las especificaciones aparecen solo cuando el usuario las pide.",
+    "products.text": "La ficha aparece solo cuando el usuario la solicita. Antes, manda la imagen y la decision rapida.",
     "products.nmcTitle": "Pack compacto de alta densidad",
     "products.lfpTitle": "Seguridad, vida util y robustez",
     "products.bmsTitle": "Control multipack centralizado",
@@ -71,22 +82,24 @@ const translations = {
     "products.specs": "Ver especificaciones",
     "products.add": "Incluir en consulta",
     "process.eyebrow": "Proceso guiado",
-    "process.title": "De la necesidad tecnica a una propuesta viable.",
-    "process.oneTitle": "Recogida de requisitos",
-    "process.oneText": "Aplicacion, energia, tension, restricciones mecanicas, plazos y volumen estimado.",
-    "process.twoTitle": "Validacion de integracion",
-    "process.twoText": "Revisamos envolvente, montaje, comunicacion, perfil de uso y condiciones termicas.",
-    "process.threeTitle": "Configuracion recomendada",
-    "process.threeText": "Se propone producto, arquitectura multipack, documentacion y nivel de personalizacion.",
-    "process.fourTitle": "Oferta y soporte inicial",
-    "process.fourText": "El equipo tecnico-comercial acompana la primera instalacion y puesta en marcha.",
+    "process.open": "Abrir proceso guiado",
+    "process.close": "Cerrar proceso guiado",
+    "process.title": "Como navegar esta version y llegar a una consulta util.",
+    "process.oneTitle": "Entrada rapida al proyecto",
+    "process.oneText": "La ruta guiada permite elegir aplicacion, fase e interes sin leer toda la web. Esos datos pasan al formulario para que el usuario no repita informacion y llegue antes a una consulta tecnica concreta.",
+    "process.twoTitle": "Exploracion por aplicaciones",
+    "process.twoText": "La seccion de aplicaciones ordena los casos principales: bus, marino, agricola, vehiculo comercial, carga movil y ferrocarril. Sirve para que un visitante no tecnico identifique su entorno de uso en pocos segundos.",
+    "process.threeTitle": "Productos sin saturar",
+    "process.threeText": "El carrusel muestra primero imagenes y solo despliega especificaciones cuando el usuario lo pide. Asi se evita convertir la version intuitiva en una ficha tecnica pesada y se mantiene la navegacion limpia.",
+    "process.fourTitle": "Consulta y documentacion",
+    "process.fourText": "La consulta tecnica recoge datos minimos pero validos: contacto, empresa, aplicacion, fase, interes y necesidad. Despues se solicita documentacion con contexto, para que la respuesta comercial y tecnica sea mas precisa.",
     "docs.eyebrow": "Documentacion tecnica",
-    "docs.title": "Ficha tecnica, arquitectura y requisitos sin formularios confusos.",
-    "docs.text": "La descarga se plantea como una oportunidad de cualificacion: menos campos irrelevantes, mas contexto util para responder mejor al proyecto.",
+    "docs.title": "Datos tecnicos cuando ya hay contexto.",
+    "docs.text": "La documentacion se solicita con una consulta breve para responder con informacion util.",
     "docs.cta": "Solicitar documentacion",
     "contact.eyebrow": "Consulta tecnica",
     "contact.title": "Cuentanos el proyecto y lo orientamos desde el primer contacto.",
-    "contact.text": "Este formulario sustituye el contacto generico por una solicitud cualificada. El objetivo es que ventas e ingenieria reciban informacion accionable desde el primer mensaje.",
+    "contact.text": "Un formulario corto para que ventas e ingenieria reciban lo importante desde el primer mensaje.",
     "contact.trustOne": "Series cortas y medias",
     "contact.trustTwo": "Movilidad no automovil",
     "form.name": "Nombre",
@@ -94,9 +107,9 @@ const translations = {
     "form.email": "Correo profesional",
     "form.country": "Pais",
     "form.application": "Aplicacion principal",
-    "form.option": "Selecciona una opcion",
+    "form.option": "Selecciona",
     "form.stage": "Fase del proyecto",
-    "form.stageOption": "Selecciona una fase",
+    "form.stageOption": "Selecciona fase",
     "form.interest": "Interes principal",
     "form.need": "Necesidad tecnica",
     "form.placeholder": "Energia requerida, tension, plazos, volumen estimado o restricciones de integracion.",
@@ -136,47 +149,46 @@ const translations = {
     "nav.process": "Process",
     "nav.docs": "Documentation",
     "nav.cta": "Technical enquiry",
+    "nav.openMenu": "Open menu",
+    "nav.top": "Back to top",
+    "lang.select": "Select language",
+    "lang.es": "ES Spanish",
+    "lang.en": "EN English",
+    "lang.eu": "EU Basque",
+    "lang.fr": "FR French",
     "hero.eyebrow": "High-voltage batteries for demanding electric mobility",
-    "hero.title": "Industrial systems that speed up electric integration for OEMs and manufacturers.",
-    "hero.text": "Modular packs, multipack architecture and technical support for bus, marine, agricultural, light commercial, mobile charging and rail applications.",
+    "hero.title": "Clear HV systems for direct integration.",
+    "hero.text": "Modular packs, multipack control and technical support for industrial electric mobility applications.",
     "hero.primary": "Guide my project",
     "hero.secondary": "Explore products",
     "metric.energy": "Energy per pack",
     "metric.arch": "Nominal architectures",
     "metric.protection": "Industrial protection",
     "metric.multipack": "Multipack management",
-    "path.application": "I have an application",
-    "path.applicationText": "Find the sector approach.",
-    "path.products": "I want to see products",
-    "path.productsText": "Image, summary and detail on demand.",
-    "path.docs": "I need technical data",
-    "path.docsText": "Datasheet, configuration and requirements.",
-    "path.engineering": "I want to speak with engineering",
-    "path.engineeringText": "Qualified request from the first step.",
+    "guide.eyebrow": "Guided route",
+    "guide.title": "Three decisions to reach the next step.",
+    "guide.text": "Choose application, stage and interest. The page prepares the request and removes unnecessary steps.",
+    "guide.cta": "Prepare enquiry",
+    "guide.empty": "Select at least one option to prepare the enquiry.",
+    "guide.done": "Enquiry guided. Your choices have been moved into the form.",
     "apps.eyebrow": "Applications",
     "apps.title": "A clear entry point for every project type.",
-    "apps.text": "The site guides by industrial need before catalog browsing. Visitors quickly understand whether the solution fits their vehicle, power, energy and project stage.",
+    "apps.text": "First choose the usage environment. Then the solution and request become easier to guide.",
     "apps.busTitle": "Electric and hydrogen buses",
-    "apps.busText": "Multi-rack architectures for urban, interurban and different chassis lengths.",
-    "apps.busCta": "Validate integration",
+    "apps.busText": "Multi-rack for urban and intercity use.",
     "apps.seaTitle": "Electric and hybrid marine",
-    "apps.seaText": "Parallel systems for ferries, workboats and hybrid power units.",
-    "apps.seaCta": "Review marine case",
+    "apps.seaText": "Parallel packs for ferries and marine work.",
     "apps.agrTitle": "Agricultural and mobile industrial",
-    "apps.agrText": "Compact solutions for machinery with high energy, power and durability demands.",
-    "apps.agrCta": "Define requirements",
+    "apps.agrText": "Robust energy for mobile machinery.",
     "apps.vclTitle": "Light commercial vehicles",
-    "apps.vclText": "Format compatible with vehicle integration and short or medium production runs.",
-    "apps.vclCta": "Request guidance",
+    "apps.vclText": "Format for integration and short runs.",
     "apps.chargeTitle": "Mobile charging stations",
-    "apps.chargeText": "Packs for semi-stationary infrastructure, temporary events and local energy support.",
-    "apps.chargeCta": "Size energy",
+    "apps.chargeText": "Temporary or semi-stationary energy support.",
     "apps.railTitle": "Rail",
-    "apps.railText": "Multipack configurations for rail applications with high energy requirements.",
-    "apps.railCta": "Review architecture",
+    "apps.railText": "Multipack for high energy demand.",
     "products.eyebrow": "Products",
     "products.title": "Look first, go deeper second.",
-    "products.text": "The intuitive version avoids overwhelming tables. It presents every solution as a clear, attractive and actionable item; specifications appear only when requested.",
+    "products.text": "The datasheet appears only when requested. First come the image and the quick decision.",
     "products.nmcTitle": "Compact high-density pack",
     "products.lfpTitle": "Safety, lifetime and robustness",
     "products.bmsTitle": "Centralized multipack control",
@@ -184,22 +196,24 @@ const translations = {
     "products.specs": "View specifications",
     "products.add": "Include in enquiry",
     "process.eyebrow": "Guided process",
-    "process.title": "From technical need to viable proposal.",
-    "process.oneTitle": "Requirement intake",
-    "process.oneText": "Application, energy, voltage, mechanical constraints, timing and estimated volume.",
-    "process.twoTitle": "Integration validation",
-    "process.twoText": "We review envelope, mounting, communication, usage profile and thermal conditions.",
-    "process.threeTitle": "Recommended configuration",
-    "process.threeText": "Product, multipack architecture, documentation and customization level are proposed.",
-    "process.fourTitle": "Offer and initial support",
-    "process.fourText": "The technical-commercial team supports the first installation and commissioning.",
+    "process.open": "Open guided process",
+    "process.close": "Close guided process",
+    "process.title": "How this version guides users toward a useful enquiry.",
+    "process.oneTitle": "Fast project entry",
+    "process.oneText": "The guided route lets visitors choose application, stage and interest without reading the whole page. Those choices move into the form so users do not repeat themselves and reach a concrete technical enquiry faster.",
+    "process.twoTitle": "Application-based exploration",
+    "process.twoText": "The applications section groups the main use cases: bus, marine, agricultural, commercial vehicle, mobile charging and rail. It helps non-technical visitors identify their operating environment in seconds.",
+    "process.threeTitle": "Products without overload",
+    "process.threeText": "The carousel shows images first and reveals specifications only when requested. This keeps the intuitive version away from heavy datasheets and preserves a clean browsing flow.",
+    "process.fourTitle": "Enquiry and documentation",
+    "process.fourText": "The technical enquiry collects minimal but valid data: contact, company, application, stage, interest and need. Documentation is requested with context so the commercial and technical response can be more precise.",
     "docs.eyebrow": "Technical documentation",
-    "docs.title": "Datasheet, architecture and requirements without confusing forms.",
-    "docs.text": "The download becomes a qualification opportunity: fewer irrelevant fields and more useful context to answer the project properly.",
+    "docs.title": "Technical data once there is context.",
+    "docs.text": "Documentation is requested through a short enquiry so the answer can be useful.",
     "docs.cta": "Request documentation",
     "contact.eyebrow": "Technical enquiry",
     "contact.title": "Tell us about the project and we guide it from the first contact.",
-    "contact.text": "This form replaces generic contact with a qualified request. The goal is for sales and engineering to receive actionable information from the first message.",
+    "contact.text": "A short form so sales and engineering receive the important details from the first message.",
     "contact.trustOne": "Short and medium runs",
     "contact.trustTwo": "Non-automotive mobility",
     "form.name": "Name",
@@ -207,9 +221,9 @@ const translations = {
     "form.email": "Professional email",
     "form.country": "Country",
     "form.application": "Main application",
-    "form.option": "Select an option",
+    "form.option": "Select",
     "form.stage": "Project stage",
-    "form.stageOption": "Select a stage",
+    "form.stageOption": "Select stage",
     "form.interest": "Main interest",
     "form.need": "Technical need",
     "form.placeholder": "Required energy, voltage, timing, estimated volume or integration constraints.",
@@ -249,47 +263,46 @@ const translations = {
     "nav.process": "Prozesua",
     "nav.docs": "Dokumentazioa",
     "nav.cta": "Kontsulta teknikoa",
+    "nav.openMenu": "Ireki menua",
+    "nav.top": "Itzuli hasierara",
+    "lang.select": "Aukeratu hizkuntza",
+    "lang.es": "ES Gaztelania",
+    "lang.en": "EN Ingelesa",
+    "lang.eu": "EU Euskara",
+    "lang.fr": "FR Frantsesa",
     "hero.eyebrow": "Tentsio handiko bateriak mugikortasun elektriko zorrotzerako",
-    "hero.title": "OEM eta fabrikatzaileentzako integrazio elektrikoa azkartzen duten sistema industrialak.",
-    "hero.text": "Pack modularrak, multipack arkitektura eta laguntza teknikoa autobus, itsas, nekazaritza, ibilgailu komertzial, karga mugikor eta tren aplikazioetarako.",
+    "hero.title": "HV sistema argiak integrazio zuzenerako.",
+    "hero.text": "Pack modularrak, multipack kontrola eta laguntza teknikoa mugikortasun elektriko industrialerako.",
     "hero.primary": "Nire proiektua bideratu",
     "hero.secondary": "Produktuak ikusi",
     "metric.energy": "Energia pack bakoitzeko",
     "metric.arch": "Arkitektura nominalak",
     "metric.protection": "Babes industriala",
     "metric.multipack": "Multipack kudeaketa",
-    "path.application": "Aplikazio bat dut",
-    "path.applicationText": "Aurkitu sektorearen ikuspegia.",
-    "path.products": "Produktuak ikusi nahi ditut",
-    "path.productsText": "Irudia, laburpena eta xehetasuna eskaeran.",
-    "path.docs": "Datu teknikoak behar ditut",
-    "path.docsText": "Fitxa, konfigurazioa eta baldintzak.",
-    "path.engineering": "Ingeniaritzarekin hitz egin nahi dut",
-    "path.engineeringText": "Hasieratik sailkatutako eskaera.",
+    "guide.eyebrow": "Ibilbide gidatua",
+    "guide.title": "Hiru erabaki hurrengo urratsera iristeko.",
+    "guide.text": "Aukeratu aplikazioa, fasea eta interesa. Webak kontsulta prestatzen du eta pauso alferrikakoak kentzen ditu.",
+    "guide.cta": "Kontsulta prestatu",
+    "guide.empty": "Aukeratu gutxienez aukera bat kontsulta prestatzeko.",
+    "guide.done": "Kontsulta bideratuta. Zure aukerak formularioan sartu dira.",
     "apps.eyebrow": "Aplikazioak",
     "apps.title": "Proiektu mota bakoitzerako sarrera argia.",
-    "apps.text": "Webak lehenik premia industriala gidatzen du, ez katalogoa. Bisitariak azkar ulertzen du soluzioa ibilgailuarekin, potentziarekin, energiarekin eta fasearekin bat datorren.",
+    "apps.text": "Lehenik erabilera-ingurunea aukeratzen da. Gero soluzioa eta kontsulta errazago bideratzen dira.",
     "apps.busTitle": "Autobus elektrikoak eta hidrogenokoak",
-    "apps.busText": "Multi-rack arkitekturak hiri, hiriarteko eta luzera ezberdinetako xasiserako.",
-    "apps.busCta": "Integrazioa balioztatu",
+    "apps.busText": "Multi-rack hiriko eta hiriarteko erabilerarako.",
     "apps.seaTitle": "Itsas elektrikoa eta hibridoa",
-    "apps.seaText": "Sistema paralelizatuak ferry, lan ontzi eta potentzia unitate hibridoetarako.",
-    "apps.seaCta": "Itsas kasua aztertu",
+    "apps.seaText": "Pack paraleloak ferry eta itsas lanetarako.",
     "apps.agrTitle": "Nekazaritza eta industrial mugikorra",
-    "apps.agrText": "Energia, potentzia eta iraunkortasun handia behar duten makinentzako soluzio trinkoak.",
-    "apps.agrCta": "Baldintzak definitu",
+    "apps.agrText": "Energia sendoa makineria mugikorrerako.",
     "apps.vclTitle": "Ibilgailu komertzial arinak",
-    "apps.vclText": "Ibilgailuen integrazioarekin eta serie labur edo ertainekin bateragarria den formatua.",
-    "apps.vclCta": "Orientazioa eskatu",
+    "apps.vclText": "Integraziorako eta serie laburretarako formatua.",
     "apps.chargeTitle": "Karga estazio mugikorrak",
-    "apps.chargeText": "Azpiegitura erdi-finkoetarako, aldi baterako ekitaldietarako eta tokiko energia laguntzarako packak.",
-    "apps.chargeCta": "Energia dimentsionatu",
+    "apps.chargeText": "Aldi baterako edo erdi-finkoko energia laguntza.",
     "apps.railTitle": "Trena",
-    "apps.railText": "Energia premia handiko tren aplikazioetarako multipack konfigurazioak.",
-    "apps.railCta": "Arkitektura berrikusi",
+    "apps.railText": "Energia eskaera handirako multipack.",
     "products.eyebrow": "Produktuak",
     "products.title": "Lehenik ikusi, gero sakondu.",
-    "products.text": "Bertsio intuitiboak ez du taula astunekin itotzen. Soluzio bakoitza pieza argi, erakargarri eta erabilgarri gisa aurkezten du; zehaztapenak erabiltzaileak eskatzean agertzen dira.",
+    "products.text": "Fitxa erabiltzaileak eskatzean agertzen da. Lehenik irudia eta erabaki azkarra.",
     "products.nmcTitle": "Dentsitate handiko pack trinkoa",
     "products.lfpTitle": "Segurtasuna, bizitza erabilgarria eta sendotasuna",
     "products.bmsTitle": "Multipack kontrol zentralizatua",
@@ -297,22 +310,24 @@ const translations = {
     "products.specs": "Zehaztapenak ikusi",
     "products.add": "Kontsultan gehitu",
     "process.eyebrow": "Prozesu gidatua",
-    "process.title": "Premia teknikotik proposamen bideragarrira.",
-    "process.oneTitle": "Baldintzak jasotzea",
-    "process.oneText": "Aplikazioa, energia, tentsioa, muga mekanikoak, epeak eta aurreikusitako bolumena.",
-    "process.twoTitle": "Integrazioa balioztatzea",
-    "process.twoText": "Bolumena, muntaketa, komunikazioa, erabilera profila eta baldintza termikoak berrikusten ditugu.",
-    "process.threeTitle": "Gomendatutako konfigurazioa",
-    "process.threeText": "Produktua, multipack arkitektura, dokumentazioa eta pertsonalizazio maila proposatzen dira.",
-    "process.fourTitle": "Eskaintza eta hasierako laguntza",
-    "process.fourText": "Talde tekniko-komertzialak lehen instalazioa eta martxan jartzea laguntzen ditu.",
+    "process.open": "Ireki prozesu gidatua",
+    "process.close": "Itxi prozesu gidatua",
+    "process.title": "Bertsio honek erabiltzailea kontsulta erabilgarri batera nola eramaten duen.",
+    "process.oneTitle": "Proiektuaren sarrera azkarra",
+    "process.oneText": "Ibilbide gidatuak aplikazioa, fasea eta interesa aukeratzeko aukera ematen du web osoa irakurri gabe. Aukera horiek formulariora pasatzen dira informazioa ez errepikatzeko.",
+    "process.twoTitle": "Aplikazioen araberako esplorazioa",
+    "process.twoText": "Aplikazioen atalak erabilera kasu nagusiak biltzen ditu: autobusa, itsasoa, nekazaritza, ibilgailu komertziala, karga mugikorra eta trena.",
+    "process.threeTitle": "Produktuak gainkargarik gabe",
+    "process.threeText": "Karruselak lehenik irudiak erakusten ditu eta zehaztapenak erabiltzaileak eskatzen dituenean zabaltzen ditu. Horrela nabigazioa garbi mantentzen da.",
+    "process.fourTitle": "Kontsulta eta dokumentazioa",
+    "process.fourText": "Kontsulta teknikoak gutxieneko datu baliagarriak jasotzen ditu: kontaktua, enpresa, aplikazioa, fasea, interesa eta beharra. Dokumentazioa testuinguruarekin eskatzen da.",
     "docs.eyebrow": "Dokumentazio teknikoa",
-    "docs.title": "Fitxa teknikoa, arkitektura eta baldintzak formulario nahasirik gabe.",
-    "docs.text": "Deskarga kalifikazio aukera bihurtzen da: eremu desegoki gutxiago eta testuinguru erabilgarri gehiago proiektua hobeto erantzuteko.",
+    "docs.title": "Datu teknikoak testuingurua dagoenean.",
+    "docs.text": "Dokumentazioa kontsulta labur baten bidez eskatzen da erantzuna erabilgarria izan dadin.",
     "docs.cta": "Dokumentazioa eskatu",
     "contact.eyebrow": "Kontsulta teknikoa",
     "contact.title": "Kontatu proiektua eta lehen kontaktutik bideratuko dugu.",
-    "contact.text": "Formulario honek kontaktu generikoa eskaera sailkatu batekin ordezkatzen du. Helburua salmentek eta ingeniaritzak lehen mezutik informazio erabilgarria jasotzea da.",
+    "contact.text": "Formulario laburra, salmentek eta ingeniaritzak lehen mezutik garrantzitsuena jaso dezaten.",
     "contact.trustOne": "Serie labur eta ertainak",
     "contact.trustTwo": "Automobila ez den mugikortasuna",
     "form.name": "Izena",
@@ -320,9 +335,9 @@ const translations = {
     "form.email": "Laneko posta",
     "form.country": "Herrialdea",
     "form.application": "Aplikazio nagusia",
-    "form.option": "Aukeratu aukera bat",
+    "form.option": "Aukeratu",
     "form.stage": "Proiektuaren fasea",
-    "form.stageOption": "Aukeratu fase bat",
+    "form.stageOption": "Aukeratu fasea",
     "form.interest": "Interes nagusia",
     "form.need": "Premia teknikoa",
     "form.placeholder": "Behar den energia, tentsioa, epeak, aurreikusitako bolumena edo integrazio mugak.",
@@ -362,47 +377,46 @@ const translations = {
     "nav.process": "Processus",
     "nav.docs": "Documentation",
     "nav.cta": "Demande technique",
+    "nav.openMenu": "Ouvrir le menu",
+    "nav.top": "Retour en haut",
+    "lang.select": "Choisir la langue",
+    "lang.es": "ES Espagnol",
+    "lang.en": "EN Anglais",
+    "lang.eu": "EU Basque",
+    "lang.fr": "FR Francais",
     "hero.eyebrow": "Batteries haute tension pour mobilite electrique exigeante",
-    "hero.title": "Systemes industriels qui accelerent l'integration electrique des OEM et fabricants.",
-    "hero.text": "Packs modulaires, architecture multipack et support technique pour bus, marine, agricole, vehicules utilitaires, recharge mobile et ferroviaire.",
+    "hero.title": "Systemes HV clairs pour integration directe.",
+    "hero.text": "Packs modulaires, controle multipack et support technique pour applications industrielles de mobilite electrique.",
     "hero.primary": "Orienter mon projet",
     "hero.secondary": "Explorer les produits",
     "metric.energy": "Energie par pack",
     "metric.arch": "Architectures nominales",
     "metric.protection": "Protection industrielle",
     "metric.multipack": "Gestion multipack",
-    "path.application": "J'ai une application",
-    "path.applicationText": "Trouver l'approche par secteur.",
-    "path.products": "Je veux voir les produits",
-    "path.productsText": "Image, resume et detail a la demande.",
-    "path.docs": "J'ai besoin de donnees techniques",
-    "path.docsText": "Fiche, configuration et exigences.",
-    "path.engineering": "Je veux parler a l'ingenierie",
-    "path.engineeringText": "Demande qualifiee des le depart.",
+    "guide.eyebrow": "Parcours guide",
+    "guide.title": "Trois decisions pour atteindre l'etape suivante.",
+    "guide.text": "Choisissez application, phase et interet. La page prepare la demande et evite les etapes inutiles.",
+    "guide.cta": "Preparer la demande",
+    "guide.empty": "Selectionnez au moins une option pour preparer la demande.",
+    "guide.done": "Demande orientee. Vos choix ont ete ajoutes au formulaire.",
     "apps.eyebrow": "Applications",
     "apps.title": "Une entree claire pour chaque type de projet.",
-    "apps.text": "Le site guide d'abord par besoin industriel, pas par catalogue. Le visiteur comprend rapidement si la solution convient au vehicule, a la puissance, a l'energie et a la phase du projet.",
+    "apps.text": "On choisit d'abord l'environnement d'usage. Ensuite la solution et la demande deviennent plus faciles a orienter.",
     "apps.busTitle": "Bus electriques et hydrogene",
-    "apps.busText": "Architectures multi-rack pour vehicules urbains, interurbains et chassis de differentes longueurs.",
-    "apps.busCta": "Valider l'integration",
+    "apps.busText": "Multi-rack pour urbain et interurbain.",
     "apps.seaTitle": "Marine electrique et hybride",
-    "apps.seaText": "Systemes parallelises pour ferries, bateaux de travail et unites de puissance hybrides.",
-    "apps.seaCta": "Etudier le cas marine",
+    "apps.seaText": "Packs paralleles pour ferries et travail marin.",
     "apps.agrTitle": "Agricole et industriel mobile",
-    "apps.agrText": "Solutions compactes pour machines avec fortes exigences d'energie, de puissance et de durabilite.",
-    "apps.agrCta": "Definir les exigences",
+    "apps.agrText": "Energie robuste pour machines mobiles.",
     "apps.vclTitle": "Vehicules utilitaires legers",
-    "apps.vclText": "Format compatible avec l'integration vehicule et les petites ou moyennes series.",
-    "apps.vclCta": "Demander une orientation",
+    "apps.vclText": "Format pour integration et petites series.",
     "apps.chargeTitle": "Stations de recharge mobiles",
-    "apps.chargeText": "Packs pour infrastructure semi-stationnaire, evenements temporaires et support energetique local.",
-    "apps.chargeCta": "Dimensionner l'energie",
+    "apps.chargeText": "Support energetique temporaire ou semi-stationnaire.",
     "apps.railTitle": "Ferroviaire",
-    "apps.railText": "Configurations multipack pour applications ferroviaires a besoins energetiques eleves.",
-    "apps.railCta": "Revoir l'architecture",
+    "apps.railText": "Multipack pour forte demande energetique.",
     "products.eyebrow": "Produits",
     "products.title": "On regarde d'abord, on approfondit ensuite.",
-    "products.text": "La version intuitive evite les tableaux lourds. Chaque solution apparait comme un element clair, attractif et actionnable; les specifications n'apparaissent que sur demande.",
+    "products.text": "La fiche apparait seulement sur demande. D'abord l'image et la decision rapide.",
     "products.nmcTitle": "Pack compact haute densite",
     "products.lfpTitle": "Securite, duree de vie et robustesse",
     "products.bmsTitle": "Controle multipack centralise",
@@ -410,22 +424,24 @@ const translations = {
     "products.specs": "Voir specifications",
     "products.add": "Inclure dans la demande",
     "process.eyebrow": "Processus guide",
-    "process.title": "Du besoin technique a une proposition viable.",
-    "process.oneTitle": "Collecte des exigences",
-    "process.oneText": "Application, energie, tension, contraintes mecaniques, delais et volume estime.",
-    "process.twoTitle": "Validation de l'integration",
-    "process.twoText": "Nous analysons enveloppe, montage, communication, profil d'usage et conditions thermiques.",
-    "process.threeTitle": "Configuration recommandee",
-    "process.threeText": "Produit, architecture multipack, documentation et niveau de personnalisation sont proposes.",
-    "process.fourTitle": "Offre et support initial",
-    "process.fourText": "L'equipe technique et commerciale accompagne la premiere installation et mise en service.",
+    "process.open": "Ouvrir le processus guide",
+    "process.close": "Fermer le processus guide",
+    "process.title": "Comment cette version guide vers une demande utile.",
+    "process.oneTitle": "Entree rapide du projet",
+    "process.oneText": "Le parcours guide permet de choisir application, phase et interet sans lire toute la page. Ces choix passent dans le formulaire pour eviter les repetitions et accelerer la demande technique.",
+    "process.twoTitle": "Exploration par applications",
+    "process.twoText": "La section applications regroupe les cas principaux: bus, marine, agricole, vehicule utilitaire, recharge mobile et ferroviaire. Elle aide un visiteur non technique a se reperer vite.",
+    "process.threeTitle": "Produits sans surcharge",
+    "process.threeText": "Le carrousel montre d'abord les images et ouvre les specifications seulement sur demande. La navigation reste claire et la version intuitive ne devient pas une fiche technique lourde.",
+    "process.fourTitle": "Demande et documentation",
+    "process.fourText": "La demande technique recueille les donnees minimales mais utiles: contact, entreprise, application, phase, interet et besoin. La documentation est demandee avec contexte.",
     "docs.eyebrow": "Documentation technique",
-    "docs.title": "Fiche technique, architecture et exigences sans formulaires confus.",
-    "docs.text": "Le telechargement devient une opportunite de qualification: moins de champs inutiles et plus de contexte utile pour repondre au projet.",
+    "docs.title": "Donnees techniques quand le contexte existe.",
+    "docs.text": "La documentation est demandee avec une courte demande pour fournir une reponse utile.",
     "docs.cta": "Demander documentation",
     "contact.eyebrow": "Demande technique",
     "contact.title": "Parlez-nous du projet et nous l'orientons des le premier contact.",
-    "contact.text": "Ce formulaire remplace le contact generique par une demande qualifiee. L'objectif est que ventes et ingenierie recoivent une information exploitable des le premier message.",
+    "contact.text": "Un formulaire court pour que ventes et ingenierie recoivent l'essentiel des le premier message.",
     "contact.trustOne": "Petites et moyennes series",
     "contact.trustTwo": "Mobilite non automobile",
     "form.name": "Nom",
@@ -433,9 +449,9 @@ const translations = {
     "form.email": "Email professionnel",
     "form.country": "Pays",
     "form.application": "Application principale",
-    "form.option": "Selectionner une option",
+    "form.option": "Selectionner",
     "form.stage": "Phase du projet",
-    "form.stageOption": "Selectionner une phase",
+    "form.stageOption": "Selectionner phase",
     "form.interest": "Interet principal",
     "form.need": "Besoin technique",
     "form.placeholder": "Energie requise, tension, delais, volume estime ou contraintes d'integration.",
@@ -588,11 +604,15 @@ function getText(key) {
 }
 
 const formRules = {
-  fields: new Set(["name", "company", "email", "country", "application", "stage", "interest", "message", "privacy"]),
+  fields: new Set(["website", "name", "company", "email", "country", "application", "stage", "interest", "message", "privacy"]),
   application: new Set(["bus", "sea", "agr", "vcl", "charge", "rail", "unknown"]),
   stage: new Set(["explore", "design", "validation", "purchase"]),
   interest: new Set(["nmc", "lfp", "bms", "compare", "docs"]),
   privacy: new Set(["accepted"]),
+  email: {
+    max: 160,
+    pattern: /^[^\s@<>(){}[\]"'`]+@[^\s@<>(){}[\]"'`]+\.[^\s@<>(){}[\]"'`]{2,}$/i
+  },
   name: {
     min: 2,
     max: 80,
@@ -626,6 +646,11 @@ function validateTextField(element, rule) {
   return rule.pattern.test(value);
 }
 
+function validateEmailField(element) {
+  const value = element.value.trim();
+  return value.length <= formRules.email.max && element.validity.valid && formRules.email.pattern.test(value);
+}
+
 function isEditableControl(element) {
   return (
     element instanceof HTMLInputElement ||
@@ -634,16 +659,31 @@ function isEditableControl(element) {
   );
 }
 
+function clearFieldState(element) {
+  element.setCustomValidity("");
+  element.removeAttribute("aria-invalid");
+}
+
+function markFieldInvalid(element, message = getText("feedback.invalidValue")) {
+  element.setCustomValidity(message);
+  element.setAttribute("aria-invalid", "true");
+}
+
 function validateLeadForm(form) {
   let firstInvalid = null;
   const controls = Array.from(form.elements).filter(isEditableControl);
 
-  controls.forEach((element) => element.setCustomValidity(""));
+  controls.forEach(clearFieldState);
 
   const unexpected = controls.find((element) => element.name && !formRules.fields.has(element.name));
   if (unexpected) {
-    unexpected.setCustomValidity(getText("feedback.invalidValue"));
+    markFieldInvalid(unexpected);
     return { valid: false, firstInvalid: unexpected };
+  }
+
+  const website = form.elements.website;
+  if (website && website.value.trim() !== "") {
+    return { valid: false, firstInvalid: null };
   }
 
   const data = new FormData(form);
@@ -664,7 +704,7 @@ function validateLeadForm(form) {
   const checks = [
     [name, validateTextField(name, formRules.name)],
     [company, validateTextField(company, formRules.company)],
-    [email, email.value.trim().length <= 160 && email.validity.valid],
+    [email, validateEmailField(email)],
     [country, validateTextField(country, formRules.country)],
     [application, formRules.application.has(application.value)],
     [stage, formRules.stage.has(stage.value)],
@@ -675,7 +715,7 @@ function validateLeadForm(form) {
 
   checks.forEach(([element, valid]) => {
     if (!valid) {
-      element.setCustomValidity(getText("feedback.invalidValue"));
+      markFieldInvalid(element);
       if (!firstInvalid) firstInvalid = element;
     }
   });
@@ -689,6 +729,7 @@ function setActiveProduct(productKey, shouldCenter = true) {
   productSlides.forEach((slide) => {
     const isActive = slide.dataset.product === activeProduct;
     slide.classList.toggle("is-active", isActive);
+    slide.setAttribute("aria-current", isActive ? "true" : "false");
   });
 }
 
@@ -734,7 +775,16 @@ function applyLanguage(lang) {
     if (value) element.setAttribute("placeholder", value);
   });
 
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    const value = getText(element.dataset.i18nAriaLabel);
+    if (value) element.setAttribute("aria-label", value);
+  });
+
   if (currentLang) currentLang.textContent = selectedLanguage.toUpperCase();
+  if (processTrigger && processPanel) {
+    const isOpen = processPanel.classList.contains("is-open");
+    processTrigger.setAttribute("aria-label", getText(isOpen ? "process.close" : "process.open"));
+  }
   if (selectedProduct && productDrawer && !productDrawer.hidden) showProductDrawer(selectedProduct);
 }
 
@@ -744,6 +794,91 @@ function startCarousel() {
 
 function stopCarousel() {
   productCarousel?.classList.add("is-paused");
+}
+
+function moveCarousel(direction) {
+  const currentIndex = Math.max(0, productOrder.indexOf(activeProduct));
+  const nextIndex = (currentIndex + direction + productOrder.length) % productOrder.length;
+  const nextProduct = productOrder[nextIndex];
+  stopCarousel();
+  setActiveProduct(nextProduct);
+  if (selectedProduct && productDrawer && !productDrawer.hidden) {
+    showProductDrawer(nextProduct);
+  }
+  window.setTimeout(startCarousel, 2600);
+}
+
+function setLeadValue(name, value) {
+  if (!leadForm || !value || !leadForm.elements[name]) return;
+  leadForm.elements[name].value = value;
+  leadForm.elements[name].setCustomValidity("");
+}
+
+function applyGuideSelection() {
+  if (!leadForm) return;
+  const application = guideApplication?.value || "";
+  const stage = guideStage?.value || "";
+  const interest = guideInterest?.value || "";
+
+  if (!application && !stage && !interest) {
+    if (guideFeedback) guideFeedback.textContent = getText("guide.empty");
+    return;
+  }
+
+  setLeadValue("application", application);
+  setLeadValue("stage", stage);
+  setLeadValue("interest", interest);
+
+  if (productOrder.includes(interest)) {
+    showProductDrawer(interest);
+  }
+
+  if (guideFeedback) guideFeedback.textContent = getText("guide.done");
+  if (feedback) feedback.textContent = getText("guide.done");
+  document.querySelector("#contacto")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function updateScrollTopVisibility() {
+  if (!scrollTopButton) return;
+  scrollTopButton.classList.toggle("is-visible", window.scrollY > 520);
+}
+
+function setProcessPanel(open) {
+  if (!processPanel || !processTrigger) return;
+  processPanel.classList.toggle("is-open", open);
+  processPanel.setAttribute("aria-hidden", String(!open));
+  processTrigger.setAttribute("aria-expanded", String(open));
+  processTrigger.setAttribute("aria-label", getText(open ? "process.close" : "process.open"));
+
+  if (open) {
+    processPanel.focus({ preventScroll: true });
+  } else {
+    processTrigger.focus({ preventScroll: true });
+  }
+}
+
+async function sendLeadForm(form) {
+  if (window.location.protocol === "file:") {
+    return { ok: true, message: getText("feedback.sent"), fields: [] };
+  }
+
+  try {
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: {
+        Accept: "application/json"
+      }
+    });
+    const payload = await response.json().catch(() => ({}));
+    return {
+      ok: response.ok && payload.ok !== false,
+      message: payload.message || (response.ok ? getText("feedback.sent") : getText("feedback.invalid")),
+      fields: Array.isArray(payload.fields) ? payload.fields : []
+    };
+  } catch {
+    return { ok: true, message: getText("feedback.sent"), fields: [] };
+  }
 }
 
 if (menuButton && mainNav) {
@@ -800,6 +935,12 @@ if (productCarousel) {
   });
 }
 
+carouselButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    moveCarousel(button.dataset.carousel === "next" ? 1 : -1);
+  });
+});
+
 if (drawerAddButton) {
   drawerAddButton.addEventListener("click", () => {
     if (!selectedProduct || !interestSelect) return;
@@ -808,6 +949,27 @@ if (drawerAddButton) {
     document.querySelector("#contacto")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
+
+if (guideButton) {
+  guideButton.addEventListener("click", applyGuideSelection);
+}
+
+if (processTrigger && processPanel) {
+  processTrigger.addEventListener("click", () => {
+    setProcessPanel(!processPanel.classList.contains("is-open"));
+  });
+}
+
+if (processClose) {
+  processClose.addEventListener("click", () => setProcessPanel(false));
+}
+
+processLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    setProcessPanel(true);
+  });
+});
 
 if (languageButton && languageMenu) {
   languageButton.addEventListener("click", () => {
@@ -824,20 +986,60 @@ if (languageButton && languageMenu) {
   });
 }
 
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  if (!event.target.closest(".language-widget") && languageMenu && languageButton) {
+    languageMenu.classList.remove("is-open");
+    languageButton.setAttribute("aria-expanded", "false");
+  }
+  if (
+    !event.target.closest(".process-widget") &&
+    !event.target.closest("a[href='#proceso']") &&
+    processPanel &&
+    processTrigger &&
+    processPanel.classList.contains("is-open")
+  ) {
+    setProcessPanel(false);
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (mainNav && menuButton) {
+    mainNav.classList.remove("is-open");
+    menuButton.setAttribute("aria-expanded", "false");
+  }
+  if (languageMenu && languageButton) {
+    languageMenu.classList.remove("is-open");
+    languageButton.setAttribute("aria-expanded", "false");
+  }
+  if (processPanel && processPanel.classList.contains("is-open")) {
+    setProcessPanel(false);
+  }
+});
+
+if (scrollTopButton) {
+  scrollTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  window.addEventListener("scroll", updateScrollTopVisibility, { passive: true });
+  updateScrollTopVisibility();
+}
+
 if (leadForm && feedback) {
   leadForm.addEventListener("input", (event) => {
     if (isEditableControl(event.target)) {
-      event.target.setCustomValidity("");
+      clearFieldState(event.target);
     }
   });
 
   leadForm.addEventListener("change", (event) => {
     if (isEditableControl(event.target)) {
-      event.target.setCustomValidity("");
+      clearFieldState(event.target);
     }
   });
 
-  leadForm.addEventListener("submit", (event) => {
+  leadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const result = validateLeadForm(leadForm);
 
@@ -848,8 +1050,23 @@ if (leadForm && feedback) {
       return;
     }
 
-    feedback.textContent = getText("feedback.sent");
+    feedback.textContent = "";
+    const response = await sendLeadForm(leadForm);
+
+    if (!response.ok) {
+      response.fields.forEach((field) => {
+        if (leadForm.elements[field]) {
+          markFieldInvalid(leadForm.elements[field], response.message);
+        }
+      });
+      feedback.textContent = response.message || getText("feedback.invalid");
+      leadForm.reportValidity();
+      return;
+    }
+
+    feedback.textContent = response.message || getText("feedback.sent");
     leadForm.reset();
+    Array.from(leadForm.elements).filter(isEditableControl).forEach(clearFieldState);
   });
 }
 
